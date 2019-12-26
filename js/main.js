@@ -1,6 +1,15 @@
-const randomUser = "https://randomuser.me/api?results=12";
+/**
+ * Endpoint Url
+ */
+const randomUser = "https://randomuser.me/api?results=12&nat=us";
 
+const modalCloseBtn = document.getElementById("modal-close-btn");
 const displayUser = document.getElementById("gallery");
+const gallery = document.getElementsByClassName("gallery")[0];
+const modalInfoContainer = document.getElementsByClassName(
+  "modal-info-container"
+)[0];
+const modalInfo = document.getElementsByClassName("modal-container")[0];
 
 /**
  * fetch makes an api call to the url stored in const randomUser
@@ -38,7 +47,7 @@ function displayRandUsers(data) {
         </div>
         </div>
         `;
-    displayUser.innerHTML = html;
+    displayUser.innerHTML += html;
   });
 }
 
@@ -54,4 +63,37 @@ function checkStatus(response) {
   } else {
     return Promise.reject(new Error(response.statusText));
   }
+}
+
+/**
+ * hides the modal window by default
+ */
+document.getElementsByClassName("modal-container")[0].style.display = "none";
+
+/**
+ * The event listener listens for a click event and calls
+ * the openModal function which displays the modal window
+ */
+
+gallery.addEventListener("click", openModal);
+
+/**
+ * An event listener  that  listens for a click event and calls
+ * the closeModal function which is responsible for closing the
+ * modal window
+ */
+
+modalCloseBtn.addEventListener("click", closeModal);
+
+/**
+ * Close the modal window
+ */
+function closeModal() {
+  modalInfo.style.display = "none";
+}
+/**
+ * Shows the modal window
+ */
+function openModal() {
+  modalInfo.style.display = "block";
 }
