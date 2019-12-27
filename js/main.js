@@ -2,14 +2,28 @@ const gallery = document.getElementById("gallery");
 
 const randomUser = "https://randomuser.me/api?results=12&nat=us";
 
+/**
+ * The fetch method makes an api call to the endpoint  stored in randomUser
+ */
+
 fetch(randomUser)
   .then(response => response.json())
-  .then(data => getData(data.results));
+  .then(data => getData(data.results))
+  .catch(error => {
+    gallery.innerHTML = "<h3 id='myHeader'>oops  !something went wrong</h3>";
+    $("#myHeader").css("color", "red");
+  });
 
 function getData(data) {
   displayRandUser(data);
   modalDisplay(data);
 }
+
+/**
+ * The displayRandUser function populates
+ * the html tag  displays the user information
+ * @param {array of object} data
+ */
 
 const displayRandUser = data => {
   data.forEach(user => {
@@ -34,10 +48,13 @@ const displayRandUser = data => {
     gallery.innerHTML += html;
   });
 };
-
+/**
+ * The modalDisplay function is
+ * responsible for creating the modal window.
+ * Formats the returned dob value
+ * @param {array of object} data
+ */
 const modalDisplay = data => {
-  let array = [data];
-
   let cards = document.querySelectorAll(".card");
 
   for (let i = 0; i < cards.length; i++) {
@@ -104,11 +121,6 @@ $("header h1").css("color", "#ffffff");
  * Search functionality
  */
 const searchBar = document.getElementsByClassName("search-container")[0];
-
-let inputValue = document.getElementById("search-input");
-
-const searchSubmit = document.getElementById("search-submit");
-
 searchBar.innerHTML = `
 <form action="#" method="get">
 <input type="search" id="search-input" class="search-input" placeholder="Search...">
@@ -116,9 +128,10 @@ searchBar.innerHTML = `
 </form>
 `;
 
-inputValue.addEventListener("keyup", search);
-searchSubmit.addEventListener("click", search);
+let inputValue = document.getElementById("search-input");
 
+const searchSubmit = document.getElementById("search-submit");
+let cards = document.querySelectorAll(".card");
 const search = event => {
   for (i = 0; i < cards.length; i++) {
     const userName = cards[i].querySelector("#name").textContent.toLowerCase();
@@ -126,7 +139,9 @@ const search = event => {
       event.preventDefault();
       cards[i].style.display = "none";
     } else {
-      card[i].style.display = "flex";
+      cards[i].style.display = "flex";
     }
   }
 };
+inputValue.addEventListener("keyup", search);
+searchSubmit.addEventListener("click", search);
