@@ -1,42 +1,26 @@
-/**
- * Endpoint Url
- */
+const gallery = document.getElementById("gallery");
+
 const randomUser = "https://randomuser.me/api?results=12&nat=us";
 
-const modalCloseBtn = document.getElementById("modal-close-btn");
-const displayUser = document.getElementById("gallery");
-const gallery = document.getElementsByClassName("gallery")[0];
-const modalInfoContainer = document.getElementsByClassName(
-  "modal-info-container"
-)[0];
-const modalInfo = document.getElementsByClassName("modal-container")[0];
-
-/**
- * fetch makes an api call to the url stored in const randomUser
- */
 fetch(randomUser)
-  .then(checkStatus)
   .then(response => response.json())
-  .then(data => displayRandUsers(data.results))
-  .catch(error => console.log("we have a problem", error));
+  .then(data => getData(data.results));
 
-/**
- * The functions displays the random user information.
- * @param {An array of object} data
- */
+function getData(data) {
+  displayRandUser(data);
+  modalDisplay(data);
+}
 
-function displayRandUsers(data) {
-  data.map(user => {
+const displayRandUser = data => {
+  data.forEach(user => {
     const html = `
-        <div class="card">
-        <div class="card-img-container">
-          <img
-            class="card-img"
-            src="${user.picture.medium}"
-            alt="profile picture"
-          />
-        </div>
-        <div class="card-info-container">
+  <div class="card">
+      <div class="card-img-container">
+          <img class="card-img" src="${
+            user.picture.medium
+          }" alt="profile picture">
+      </div>
+      <div class="card-info-container">
           <h3 id="name" class="card-name cap">${user.name.first} ${
       user.name.last
     }</h3>
@@ -44,56 +28,95 @@ function displayRandUsers(data) {
           <p class="card-text cap">${user.location.city}, ${
       user.location.state
     }</p>
-        </div>
-        </div>
-        `;
-    displayUser.innerHTML += html;
+      </div>
+  </div>
+  `;
+    gallery.innerHTML += html;
   });
-}
+};
 
-/**
- * The function checks if  promise resolved with the response object
- * ok property is equal to true before parsing to JSON
- * @param {object} response
- * @return {object} promise object
- */
-function checkStatus(response) {
-  if (response.ok) {
-    return Promise.resolve(response);
-  } else {
-    return Promise.reject(new Error(response.statusText));
+const modalDisplay = data => {
+  let array = [data];
+
+  const cards = document.querySelectorAll(".card");
+
+  for (let i = 0; i < cards.length; i++) {
+    cards[i].addEventListener("click", function(e) {
+      const DOB = data[i].dob.date;
+      const birthday = DOB.substring(0, 10);
+
+      let re = /-/g;
+      const dobFormatted = re[Symbol.replace](birthday, " / ");
+
+      const html = `
+  <div class="modal-container">
+      <div class="modal">
+        <button type="button" id="modal-close-btn" class="modal-close-btn">
+          <strong>X</strong>
+        </button>
+        <div class="modal-info-container">
+          <img
+            class="modal-img"
+            src="${data[i].picture.large}"
+            alt="profile picture"
+          />
+          <h3 id="name" class="modal-name cap">${data[i].name.first} ${
+        data[i].name.last
+      }</h3>
+          <p class="modal-text"> ${data[i].email}</p>
+          <p class="modal-text cap">${data[i].location.city}</p>
+          <hr />
+          <p class="modal-text">(555) 555-5555</p>
+          <p class="modal-text">
+          ${data[i].location.street.number}
+          ${data[i].location.street.name}
+          ${data[i].location.country}
+          ${data[i].location.postcode}
+          <p class="modal-text">Birthday: ${dobFormatted}</p>
+        </div>
+      </div>
+    </div>
+  
+  `;
+      let modalDiv = document.createElement("div");
+      modalDiv.className = "modal-container";
+      let body = document.querySelector("body");
+      body.appendChild(modalDiv);
+
+      modalDiv.innerHTML = html;
+
+      closeButton = document.getElementById("modal-close-btn");
+      closeButton.addEventListener("click", e => {
+        body.removeChild(modalDiv);
+      });
+    });
   }
-}
+};
 
 /**
- * hides the modal window by default
+ * CSS Styling
  */
-document.getElementsByClassName("modal-container")[0].style.display = "none";
+
+$("body").css("background-color", "#008b8b");
+$("header h1").css("color", "#ffffff");
 
 /**
- * The event listener listens for a click event and calls
- * the openModal function which displays the modal window
+ * Search functionality
  */
+const searchBar = document.getElementsByClassName("search-container")[0];
 
-gallery.addEventListener("click", openModal);
+let inputValue = document.getElementById("search-input");
 
-/**
- * An event listener  that  listens for a click event and calls
- * the closeModal function which is responsible for closing the
- * modal window
- */
+const searchSubmit = document.getElementById("search-submit");
 
-modalCloseBtn.addEventListener("click", closeModal);
+inputValue.addEventListener("keyup", search);
+searchSubmit.addEventListener("click", search);
 
-/**
- * Close the modal window
- */
-function closeModal() {
-  modalInfo.style.display = "none";
-}
-/**
- * Shows the modal window
- */
-function openModal() {
-  modalInfo.style.display = "block";
-}
+const search = event => {
+  const html = `
+      <form action="#" method="get">
+      <input type="search" id="search-input" class="search-input" placeholder="Search...">
+      <input type="submit" value="&#x1F50D;" id="search-submit" class="search-submit">
+      </form>
+    `;
+};
