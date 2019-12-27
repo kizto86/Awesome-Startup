@@ -38,7 +38,7 @@ const displayRandUser = data => {
 const modalDisplay = data => {
   let array = [data];
 
-  const cards = document.querySelectorAll(".card");
+  let cards = document.querySelectorAll(".card");
 
   for (let i = 0; i < cards.length; i++) {
     cards[i].addEventListener("click", function(e) {
@@ -109,14 +109,24 @@ let inputValue = document.getElementById("search-input");
 
 const searchSubmit = document.getElementById("search-submit");
 
+searchBar.innerHTML = `
+<form action="#" method="get">
+<input type="search" id="search-input" class="search-input" placeholder="Search...">
+<input type="submit" value="&#x1F50D;" id="search-submit" class="search-submit">
+</form>
+`;
+
 inputValue.addEventListener("keyup", search);
 searchSubmit.addEventListener("click", search);
 
 const search = event => {
-  const html = `
-      <form action="#" method="get">
-      <input type="search" id="search-input" class="search-input" placeholder="Search...">
-      <input type="submit" value="&#x1F50D;" id="search-submit" class="search-submit">
-      </form>
-    `;
+  for (i = 0; i < cards.length; i++) {
+    const userName = cards[i].querySelector("#name").textContent.toLowerCase();
+    if (!userName.includes(inputValue.nodeValue.toLowerCase())) {
+      event.preventDefault();
+      cards[i].style.display = "none";
+    } else {
+      card[i].style.display = "flex";
+    }
+  }
 };
