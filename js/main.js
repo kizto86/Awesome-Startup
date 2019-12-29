@@ -131,11 +131,12 @@ searchBar.innerHTML = `
 let inputValue = document.getElementById("search-input");
 
 const searchSubmit = document.getElementById("search-submit");
-let cards = document.querySelectorAll(".card");
+
 const search = event => {
+  let cards = document.querySelectorAll(".card");
   for (i = 0; i < cards.length; i++) {
     const userName = cards[i].querySelector("#name").textContent.toLowerCase();
-    if (!userName.includes(inputValue.nodeValue.toLowerCase())) {
+    if (!userName.includes(inputValue.value.toLowerCase())) {
       event.preventDefault();
       cards[i].style.display = "none";
     } else {
