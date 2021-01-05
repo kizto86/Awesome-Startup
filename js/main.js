@@ -7,9 +7,9 @@ const randomUser = "https://randomuser.me/api?results=12&nat=us";
  */
 
 fetch(randomUser)
-  .then(response => response.json())
-  .then(data => getData(data.results))
-  .catch(error => {
+  .then((response) => response.json())
+  .then((data) => getData(data.results))
+  .catch((error) => {
     gallery.innerHTML = "<h3 id='myHeader'>oops  !something went wrong</h3>";
     $("#myHeader").css("color", "red");
   });
@@ -25,23 +25,17 @@ function getData(data) {
  * @param {array of object} data
  */
 
-const displayRandUser = data => {
-  data.forEach(user => {
+const displayRandUser = (data) => {
+  data.forEach((user) => {
     const html = `
   <div class="card">
       <div class="card-img-container">
-          <img class="card-img" src="${
-            user.picture.medium
-          }" alt="profile picture">
+          <img class="card-img" src="${user.picture.medium}" alt="profile picture">
       </div>
       <div class="card-info-container">
-          <h3 id="name" class="card-name cap">${user.name.first} ${
-      user.name.last
-    }</h3>
+          <h3 id="name" class="card-name cap">${user.name.first} ${user.name.last}</h3>
           <p class="card-text">${user.email}</p>
-          <p class="card-text cap">${user.location.city}, ${
-      user.location.state
-    }</p>
+          <p class="card-text cap">${user.location.city}, ${user.location.state}</p>
       </div>
   </div>
   `;
@@ -54,11 +48,11 @@ const displayRandUser = data => {
  * Formats the returned dob value
  * @param {array of object} data
  */
-const modalDisplay = data => {
+const modalDisplay = (data) => {
   let cards = document.querySelectorAll(".card");
 
   for (let i = 0; i < cards.length; i++) {
-    cards[i].addEventListener("click", function(e) {
+    cards[i].addEventListener("click", function (e) {
       const DOB = data[i].dob.date;
       const birthday = DOB.substring(0, 10);
 
@@ -77,9 +71,7 @@ const modalDisplay = data => {
             src="${data[i].picture.large}"
             alt="profile picture"
           />
-          <h3 id="name" class="modal-name cap">${data[i].name.first} ${
-        data[i].name.last
-      }</h3>
+          <h3 id="name" class="modal-name cap">${data[i].name.first} ${data[i].name.last}</h3>
           <p class="modal-text"> ${data[i].email}</p>
           <p class="modal-text cap">${data[i].location.city}</p>
           <hr />
@@ -103,7 +95,7 @@ const modalDisplay = data => {
       modalDiv.innerHTML = html;
 
       closeButton = document.getElementById("modal-close-btn");
-      closeButton.addEventListener("click", e => {
+      closeButton.addEventListener("click", (e) => {
         body.removeChild(modalDiv);
       });
     });
@@ -132,7 +124,7 @@ let inputValue = document.getElementById("search-input");
 
 const searchSubmit = document.getElementById("search-submit");
 
-const search = event => {
+const search = (event) => {
   let cards = document.querySelectorAll(".card");
   for (i = 0; i < cards.length; i++) {
     const userName = cards[i].querySelector("#name").textContent.toLowerCase();
